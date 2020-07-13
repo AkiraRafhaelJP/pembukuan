@@ -7,6 +7,7 @@
 #include<cstring>
 #include<sstream>
 #include<iomanip>
+#include<limits>
 using namespace std;
 
 void inputBelanjaanJasa();
@@ -51,7 +52,6 @@ int main(){
         system("pause");
         system("cls");
     } while(!isOver);
-    cin.ignore();
     cout << "===Tekan apapun untuk menutup===\n";
     cin.get();
     return 0;
@@ -62,16 +62,17 @@ void inputBelanjaanJasa(){
     map<string, int> belanjaan;
     cout << "Banyak belanjaan / jasa : ";
     cin >> banyakBelanjaan;
-    cin.ignore();
     for(int i = 0; i < banyakBelanjaan; i++){
         string namaBarangJasa;
         int hargaBarangJasa;
         cout << "Belanjaan / jasa ke-" << i + 1 << ": ";
         cin >> namaBarangJasa;
-        cin.ignore();
+        cin.clear();
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
         cout << "Harga : ";
         cin >> hargaBarangJasa;
-        cin.ignore();
+        cin.clear();
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
         belanjaan[namaBarangJasa] = hargaBarangJasa;
     }
     writeToHistory(belanjaan);
@@ -152,8 +153,10 @@ void totalDay(){
     string target = to_string(tanggal[0]) + "-" + to_string(tanggal[1]) + "-" + to_string(tanggal[2]);
 
     cout << tanggal[0] << " " << MONTH[tanggal[1] - 1] << " " << tanggal[2] << '\n';
-    //pembacaan file per baris
+
+    // cout << file.good() << '\n';
     
+    //pembacaan file per baris
     while(getline(file, line)){
         //cek apakah tanggal terdapat pada baris yang sedang dicek
         if(line.find(target) != string::npos){
@@ -186,6 +189,8 @@ void totalDay(){
     }
     
     file.close();
+    cin.clear();
+    cin.ignore(numeric_limits<streamsize>::max(), '\n');
 }
 
 void inputTanggal(int tanggal[]){
