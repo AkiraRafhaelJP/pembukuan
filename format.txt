@@ -1,0 +1,32 @@
+#Fitur:
+#Memasukkan harga barang belanjaan
+#Memberikan total pengeluaran dalam satu hari dan satu bulan(satu tahun coming soon)
+
+#Format :
+#<mm - 'Aug'> <yyyy> //pada awalan tiap bulan
+#<hari>, <dd>
+
+#example : 
+#Juli 2020			   
+#|-----------------------------------|
+#|Sabtu, 15		   	     |
+#|Nasi ayam              | Rp.  5000 |
+#|Telur 5 biji		 | Rp. 12000 |
+#|-----------------------------------+
+#|Total			 | Rp. 17000 |
+#|-----------------------------------|
+#
+#-----------------------------------|
+#Minggu, 16			    |
+#-----------------------------------|
+#Nasi goren		| Rp. 12000 |
+#Yamie ayam bakmi	| Rp. 19000 |
+#-----------------------------------+
+#Total			| Rp. 31000 |
+#-----------------------------------|
+#dst
+#Last updated - <hari>, <dd> <mmm> <yyyy>
+
+new format:
+<nama>-<harga>-<dd-mm-yyyy>
+
