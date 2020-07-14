@@ -7,7 +7,6 @@
 #include<cstring>
 #include<sstream>
 #include<iomanip>
-#include<limits>
 using namespace std;
 
 void inputBelanjaanJasa();
@@ -66,13 +65,9 @@ void inputBelanjaanJasa(){
         string namaBarangJasa;
         int hargaBarangJasa;
         cout << "Belanjaan / jasa ke-" << i + 1 << ": ";
-        cin >> namaBarangJasa;
-        cin.clear();
-        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        getline(cin >> ws, namaBarangJasa);
         cout << "Harga : ";
         cin >> hargaBarangJasa;
-        cin.clear();
-        cin.ignore(numeric_limits<streamsize>::max(), '\n');
         belanjaan[namaBarangJasa] = hargaBarangJasa;
     }
     writeToHistory(belanjaan);
@@ -111,7 +106,7 @@ void writeToHistory(map<string, int> belanjaan){
             file << it_belanjaan->first << '#' << it_belanjaan->second << '#';
 
             //output untuk tanggal update
-            file << date->tm_mday << '-' << date->tm_mon << '-' << date->tm_year << '\n';
+            file << date->tm_mday << '-' << date->tm_mon + 1 << '-' << date->tm_year << '\n';
             it_belanjaan++;
         }
     }
@@ -189,8 +184,6 @@ void totalDay(){
     }
     
     file.close();
-    cin.clear();
-    cin.ignore(numeric_limits<streamsize>::max(), '\n');
 }
 
 void inputTanggal(int tanggal[]){
