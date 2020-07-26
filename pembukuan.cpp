@@ -32,6 +32,9 @@ void totalMonth();
 //fungsi untuk menginputkan bulan dan tahun pada fungsi totalMonth()
 void inputTanggal2(int tanggal[]);
 
+//fungsi untuk mengekstrak tanggal dari sebuah string
+int extractTanggal(string line);
+
 //fungsi untuk validasi input integer(harga, pilihan, banyak item)
 bool validasiInputInteger(string str);
 
@@ -361,8 +364,11 @@ void totalMonth(){
     time_t now = time(0);
     tm *date = localtime(&now);
 
-    //no untuk memberikan nomor pada output barang dan jasa, total begitulah (self-explanatory)
-    int no = 1, total = 0;
+    //no untuk memberikan nomor pada output barang dan jasa.
+    //total digunakan untuk menampung total bulan tersebut
+    //sedangkan totalDay digunakan untuk menampung total pada tanggal tertentu
+    //totalItem digunakan untuk menghitung banyak item
+    int no = 1, total = 0, totalDay = 0, totalItem = 0;
 
     //array untuk menyimpan bulan, dan tahun
     int tanggal[2];
@@ -376,22 +382,48 @@ void totalMonth(){
     //target digunakan untuk menampung tanggal yang diinputkan pengguna pada fungsi sebelumnya dalam 
     //bentuk string
     string target = to_string(tanggal[0]) + "-" + to_string(tanggal[1]);
-
     cout << MONTH[tanggal[0] - 1] << " " << tanggal[1] << "\n\n";
 
     //untuk mengecek stream file apakah berhasil diakses atau tidak
     // cout << file.good() << '\n';
     
+    //variabel yang akan digunakan untuk menampilkan tanggal
+    //pada bulan yang dicari jika ada
+    //index 0 digunakan untuk menampung tanggal baris sebelumnya yang dicek
+    //index 1 digunakan untuk menampung tanggal baris yang sedang dicek di file history.txt
+    int tempTanggal[2] = {-1, -1};
+
     //pembacaan file per baris
     while(getline(file, line)){
         //cek apakah tanggal terdapat pada baris yang sedang dicek
         if(line.find(target) != string::npos){
             check = true;
 
+            //konversi tanggal ke data integer
+            tempTanggal[1] = extractTanggal(line);
+
+            //kondisi untuk output tanggal pertama kali
+            if(tempTanggal[0] == -1) {
+                cout << "Tanggal " << tempTanggal[1] << '\n';
+                tempTanggal[0] = tempTanggal[1];
+            };
+            
+            //kondisi jika tanggal sebelumnya tidak sama dengan tanggal sekarang yang dicek
+            //jika tidak, maka program akan meng-outputkan total hari pada tanggal tersebut
+            //dan tanggal sebelumnya ditimpa dengan tanggal yang sedang dicek
+            if(tempTanggal[0] != tempTanggal[1]){
+                tempTanggal[0] = tempTanggal[1];
+                cout << setfill('-') << setw(49) << "+\n";
+                cout << setfill(' ') << left << setw(34) << "Total" << ": Rp. " << right << setw(6) << totalDay << "\n\n";
+                cout << "Tanggal " << tempTanggal[1] << '\n';
+                totalDay = 0, no = 1;
+            }
+
             //self-explanatory
             string namaItem = "";
             string hargaItem = "";
             cout << right << setw(3) << no++ << ". ";
+            totalItem++;
 
             //variabel count digunakan untuk menghitung karakter '#'
             int count = 0;
@@ -412,7 +444,10 @@ void totalMonth(){
             cout << left << setw(30) << namaItem << " Rp. " << right << setw(6) << hargaItem << "\n";
 
             //proses konversi hargaItem dari string ke integer
-            total += stoi(hargaItem.c_str());
+            //self explanatory
+            int temp = stoi(hargaItem.c_str());
+            totalDay += temp;
+            total += temp;
         }
     }
 
@@ -420,8 +455,13 @@ void totalMonth(){
     //maka fitur no.2 akan meng-outputkan total harga daftar item
     //jika tidak, tampilkan pesan di else
     if(check){
+        //output untuk hari terakhir yang dicek
         cout << setfill('-') << setw(49) << "+\n";
-        cout << setfill(' ') << left << setw(34) << "Total" << ": Rp. " << right << setw(6) << total << '\n';
+        cout << setfill(' ') << left << setw(34) << "Total" << ": Rp. " << right << setw(6) << totalDay << "\n\n";
+
+        //output total bulanan
+        cout << "Banyak Item : " << totalItem << '\n';
+        cout << "Total bulanan : Rp. " << right << setw(7) << total << '\n';
     } else{
         cout << "Data pada tanggal tersebut tidak ditemukan\n";
     }
@@ -482,6 +522,15 @@ void inputTanggal2(int tanggal[]){
     
     //pesan untuk proses validasi yang telah selesai
     cout << "Input tanggal berhasil!\n\n";
+}
+
+int extractTanggal(string line){
+    string tanggal;
+    int index = line.find_last_of('#') + 1;
+    while(line[index] != '-'){
+        tanggal += line[index++];
+    }
+    return stoi(tanggal.c_str());
 }
 
 bool validasiInputInteger(string str){
